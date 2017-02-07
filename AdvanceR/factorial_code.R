@@ -13,8 +13,8 @@ Factorial_reduce <- function(x)
 {
 	lista <- 1:x
 	lista <- as.integer(lista)
-	return(cumprod(lista)[length(lista)] )
-	#return(Reduce(`*`, lista))
+	#return(cumprod(lista)[length(lista)] )
+	return(Reduce(`*`, lista))
 }
 
 
