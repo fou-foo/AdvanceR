@@ -8,6 +8,7 @@ Description: Read the data of the incidents stored in data from the US National 
 				(reading a list) and summarize the readings grouped by month and year and perform a 
 				visualization by state and year of reported incidents through a map.
 Depends: R (>= 3.3.2)
+Imports: tidyr, dplyr, maps
 License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
