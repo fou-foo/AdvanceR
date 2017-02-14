@@ -15,10 +15,10 @@
 #' tf <- tempfile()
 #' fars_read(tf)
 #'
-#' @importFrom readr, read_csv
-#' @importFrom dplyr, tbl_df
+#' @import readr
+#' @import dplyr
 #'
-#' @seealso \code{\link{tbl_df}}
+#' @seealso tbl_df
 #'
 #' @export
 #'
@@ -57,7 +57,8 @@ fars_read <- function(filename)
 make_filename <- function(year)
 	{
 		year <- as.integer(year)
-        sprintf("accident_%d.csv.bz2", year)
+
+        paste0(getwd(),sprintf("accident_%d.csv", year))
 	}
 
 
@@ -80,9 +81,9 @@ make_filename <- function(year)
 #' fars_read_years(c('2013', '2014', '2015'))
 #' fars_read_years(2013:2015)
 #'
-#' @importFrom \code{dplyr}, \code{tbl_df}, \code{select} and \code{mutate}
+#' @import  dplyr
 #'
-#' @seealso \code{\link{tbl_df}}
+#' @seealso tbl_df
 #' @export
 #'
 fars_read_years <- function(years)
@@ -122,8 +123,8 @@ fars_read_years <- function(years)
 #' fars_summarize_years(c('2013', '2014', '2015'))
 #' fars_summarize_years(2013:2015)
 #'
-#' @importFrom \code{dplyr}, \code{group_by} and \code{summarize}
-#' @importFrom \code{tidyr}, \code{spread}
+#' @import dplyr
+#' @import tidyr
 #'
 #' @seealso \code{\link{tbl_df}}
 #' @export
@@ -158,9 +159,10 @@ fars_summarize_years <- function(years)
 #' fars_map_state(1, 2013)
 #' fars_map_state(4, 2014)
 #'
-#' @importFrom \code{dplyr}, \code{filter}
-#' @importFrom \code{graphics}, \code{points}
-#' @importFrom \code{maps}, \code{map}
+#' @import  dplyr
+#' @import graphics
+#' @import maps
+#'
 #'
 #' @export
 fars_map_state <- function(state.num, year)

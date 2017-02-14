@@ -25,5 +25,5 @@ fars_read(tf)
 
 }
 \seealso{
-\code{\link{tbl_df}}
+tbl_df
 }

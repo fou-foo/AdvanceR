@@ -26,5 +26,5 @@ fars_read_years(2013:2015)
 
 }
 \seealso{
-\code{\link{tbl_df}}
+tbl_df
 }
