@@ -19,23 +19,22 @@ fecha <- function(n)
       if(as.character(nchar(data[n, 'YEAR']))==0)
         return(as.character(paste0(0000, data[n, 'YEAR'])))
   } else  {
-    if(nchar(data[n, 'YEAR'])==4)
-      return(as.character(paste0('-0', substr(data[n, 'YEAR'], 2,4))))
-    if(nchar(data[n, 'YEAR'])==3)
-      return(as.character(paste0('-00', substr(data[n, 'YEAR'], 2,3))))
-    if(nchar(data[n, 'YEAR'])==1)
-      return(as.character(paste0('-000', substr(data[n, 'YEAR'], 2,4))))
+   # if(nchar(data[n, 'YEAR'])==4)
+    #  return(as.character(paste0('-0', substr(data[n, 'YEAR'], 2,4))))
+    #if(nchar(data[n, 'YEAR'])==3)
+     # return(as.character(paste0('-00', substr(data[n, 'YEAR'], 2,3))))
+    #if(nchar(data[n, 'YEAR'])==1)
+     # return(as.character(paste0('-000', substr(data[n, 'YEAR'], 2,4))))
+    return(as.character(data[n, 'YEAR']))
   }
 }
 data[is.na(data[, 'YEAR']),'YEAR'] <- 'NA'
 data[is.na(data[, 'MONTH']),'MONTH'] <- 'NA'
 data[is.na(data[, 'DAY']),'DAY'] <- 'NA'
 data$YEAR2 <- 0
-for (i in 1:dim(data)[1])
-  data$YEAR2[i] <- fecha(i)
-mapply(fecha, 1:dim(data)[1])
-data$Date2<- (paste(data$YEAR, data$MONTH, data$DAY, sep ='-'))
-data$Date <- ymd(data$Date)
+data$YEAR2 <- mapply(fecha, 1:dim(data)[1])
+data$Date2<- (paste(data$YEAR2, data$MONTH, data$DAY, sep ='-'))
+data$Date <- ymd(data$Date2)
 
 
 
