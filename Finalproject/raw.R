@@ -2,6 +2,8 @@
 library(readr)
 library(lubridate)
 library(ggplot2)
+library(dplyr)
+library(leaflet)
 data <- read_delim(file ='C:\\Users\\fou-f\\Desktop\\AdvanceR\\Finalproject\\signif.txt', delim = '\t',guess_max = 5420) 
 fecha <- function(n)
 {
@@ -60,3 +62,4 @@ NOAA %>% eq_clean_data() %>%
   geom_timeline_label(aes(label = LOCATION_NAME)) +
   theme_timeline() +
   labs(size = "Richter scale value", color = "# deaths")
+
