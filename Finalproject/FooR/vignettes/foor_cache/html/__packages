@@ -2,7 +2,6 @@ base
 FooR
 xtable
 pander
-magrittr
 dplyr
 ggplot2
 bindrcpp
