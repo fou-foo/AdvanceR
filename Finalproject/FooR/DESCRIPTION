@@ -1,0 +1,29 @@
+Package: FooR
+Type: Package
+Title: Clean and Plot in a pretty map NOAA's Earthquakes
+Version: 0.0.0.9000
+Date: 2018-1-5
+Depends: R (>= 3.4.2)
+Imports: 
+    magrittr, 
+    dplyr, 
+    readr,
+    graphics,
+    ggplot2, 
+    lubridate,
+    leaflet
+Suggests: 
+    knitr, 
+    rmarkdown,
+    testthat
+Author: J. Antonio García
+Maintainer: J. Antonio García <jose.ramirez@cimat.mx>
+Description: Package that can be used to work with the NOAA Significant Earthquakes dataset. With data sample. 
+    This dataset has retrieve from https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1 a substantial amount of information embedded in it that may not be immediately accessible to people without knowledge of the intimate details of the dataset or of R. This package 
+    provides the tools for clean and visualizing the data in a pretty map so that others may extract some use out 
+    of the information embedded within.
+License: GNU
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+VignetteBuilder: knitr
