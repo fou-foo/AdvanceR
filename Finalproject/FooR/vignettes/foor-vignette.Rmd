@@ -1,6 +1,6 @@
 ---
-title: "Vignette Title"
-author: "Vignette Author"
+title: "A concise visualization of earthquakes in the world"
+author: "J. Antonio García, jose.ramirez@cimat.mx"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -9,57 +9,186 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include = FALSE}
-knitr::opts_chunk$set(
+
+```{r setup, include = FALSE, cache=TRUE}
+knitr::opts_chunk$set( 
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>", 
+  cache = TRUE 
 )
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+```{r libraries} 
+library(FooR)
+library(xtable)
+library(pander)
+library(dplyr)
+library(ggplot2)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+This vignette two process:
+  - Cleaning 
+  - Two different visualizations (over time - like [Doctor Who](https://en.wikipedia.org/wiki/Doctor_Who) would see it - and country)
+  
+  About the NOAA earthquake data. the data come can be obtained from [NOAA Significant Earthquake Database](https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1).
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+## Package content
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+There are ten functions within the package:
 
-## More Examples
+- `fecha()`
+- `eq_clean_data()`
+- `eq_location_clean()`
+- `theme_timeline()`
+- `GeomTimeline()`
+- `GeomTimelineLabel()`
+- `theme_timeline()`
+- `geom_timeline()`
+- `geom_timeline_label()`
+- `eq_map()`
 
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+But only the following functions are exported:
 
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+- `fecha()`
+- `eq_clean_data()`
+- `eq_location_clean()`
+- `theme_timeline()`
+- `GeomTimeline()`
+- `GeomTimelineLabel()`
+- `theme_timeline()`
+- `eq_map()`
+
+
+## Data
+The package contains the dataset obtained from [National Geophysical Data Center / World Data Service (NGDC/WDS): Significant Earthquake Database. National Geophysical Data Center, NOAA. doi:10.7289/V5TD9V7K](https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1) consulted on the date "`r format(Sys.time(), '%d %B, %Y')`" and and obviously the dataset is called *data*
+
+
+```{r print1, echo = FALSE, }
+NOAA <- data
 ```
 
-Also a quote using `>`:
+ 
+ -------------------------------------------------------------------
+  I_D   FLAG_TSUNAMI   YEAR    MONTH   DAY   HOUR   MINUTE   SECOND 
+ ----- -------------- ------- ------- ----- ------ -------- --------
+   1         NA        -2150    NA     NA     NA      NA            
+ 
+   3         NA        -2000    NA     NA     NA      NA       NA   
+ 
+ --------------------------------------------------------------------------
+  FOCAL_DEPTH   EQ_PRIMARY   EQ_MAG_MW   EQ_MAG_MS   EQ_MAG_MB   EQ_MAG_ML 
+ ------------- ------------ ----------- ----------- ----------- -----------
+      NA           7.3          NA          NA          NA          NA     
+ 
+      18           7.1          NA          7.1         NA          NA     
+ --------------------------------------------------------------------------
+ 
+  
+ ------------------------------------------------------------
+  EQ_MAG_MFA   EQ_MAG_UNK   INTENSITY     COUNTRY      STATE 
+ ------------ ------------ ----------- -------------- -------
+      NA          7.3          NA          JORDAN       NA   
+ 
+      NA           NA          10       TURKMENISTAN    NA   
+ ------------------------------------------------------------
+ 
+ 
+  
+ ------------------------------
+         LOCATION_NAME         
+ ------------------------------
+  JORDAN: BAB-A-DARAA,AL-KARAK 
+ 
+        TURKMENISTAN: W        
+ ------------------------------
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+## Data cleaning
+
+It is evident that the data set has numerous columns with  [null](https://en.wikipedia.org/wiki/Null_(SQL)) or missing values, <span style="color:RED"> although a future and interesting work for this package would be to apply data imputation techniques to the dataset </span>. For the above you can use the function *eq_clean_data()* and *eq_location_clean*
+
+```{r eq_clean_data_eq_location_clean, fig.width = 7, fig.height = 7, }
+NOAA <- eq_clean_data(NOAA)
+NOAA <- eq_location_clean(NOAA)
+```
+
+## Visualization of earthquakes by time and place :
+
+  1. [Doctor-Who](https://en.wikipedia.org/wiki/Doctor_Who)'s [view](https://en.oxforddictionaries.com/definition/view) ( or style1),          *_all the time_* and _*all the countries*_ at once.
+     You can visualize earthquakes in all dataset's time variable *YEAR* without 
+     filter by the columns *COUNTRY* and *YEAR* and using the package *ggplot* and        the recently implemented *geom_*, *geom_timeline*  and *geom_timeline_label*.        (you must pay attention with the column so that the visualization is of      a       suitable size and not empty, as in every ggplot´s function, one must have            congruent with the variables' name of the dataset  and the parameters of             *ggplot2::aes* function.)[^1] 
+
+```{r doctor,  fig.width = 16, fig.height = 17}
+NOAA %>%
+filter( DEATHS>0) %>%
+     ggplot(aes(x = Date,
+                y = COUNTRY,
+                color = DEATHS,
+                size = as.numeric(EQ_PRIMARY)
+     )) +
+     geom_timeline() +
+     #geom_timeline_label(aes(label = LOCATION_NAME)) +
+     theme_timeline() +
+     labs(size = "Richter scale value", color = "# deaths",
+          title = "Figure 1 : Doctor Who's view")
+```
+
+
+  2. No-Doctor-Who's (style2), not all the time neither all the countries at once.
+     You can visualize earthquakes in a single country after 
+     filter by the column *COUNTRY* or many others, (you must pay       attention with the columns of _YEAR_ and _DEATHS_ so that the visualization is       of a suitable size and not empty, as in every ggplot´s function, one must have      congruent with the variables' name of the dataset  and the parameters of             *ggplot2::aes* function.) 
+     
+```{r human, fig.width = 12, fig.height = 3}
+NOAA %>%
+filter(COUNTRY %in% c("USA"), 2020 > YEAR,  YEAR > 2000, DEATHS>0) %>%
+     ggplot(aes(x = Date,
+                y = COUNTRY,
+                color = DEATHS,
+                size = as.numeric(EQ_PRIMARY)
+     )) +
+     geom_timeline() +
+     geom_timeline_label(aes(label = LOCATION_NAME)) +
+     theme_timeline() +
+     labs(size = "Richter scale value", color = "# deaths",
+     title = "Figure 2: Human vision")
+```
+
+  3. Style3, not all the time neither all the countries at once.
+     You can visualize earthquakes in a single country after 
+     filter by the column *COUNTRY* or many others, (you must pay 
+     attention with the columns of _YEAR_ and _DEATHS_ as in style2)
+     
+```{r human2, fig.width = 12, fig.height = 6}
+NOAA %>%
+filter(COUNTRY %in% c("USA", "MEXICO", "JAPAN"), 2020 > YEAR,  YEAR > 2000, DEATHS>0) %>%
+     ggplot(aes(x = Date,
+                y = COUNTRY,
+                color = DEATHS,
+                size = as.numeric(EQ_PRIMARY)
+     )) +
+     geom_timeline() +
+     geom_timeline_label(aes(label = LOCATION_NAME)) +
+     theme_timeline() +
+     labs(size = "Richter scale value", color = "# deaths",
+     title = "Figure 3: Human vision")
+```
+
+# Visualize earthquakes on a pretty map
+
+Using the *leaflet* package it is very easy to make beautiful interactive maps using the function *eq_map()*.There are two options to use this function one without using the function *eq_create_label()* from where we get the following map:
+
+```{r mapa_simple, fig.width = 8, fig.height = 6}
+NOAA %>% 
+   dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(Date) >= 2000) %>% 
+  eq_map(annot_col = "DATE")
+```
+
+And the other one using it
+
+```{r mapa_con_marcas, fig.width = 8, fig.height = 6}
+NOAA %>%
+ dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(Date) >= 2000) %>% 
+  dplyr::mutate(popup_text = eq_create_label(.)) %>% 
+  eq_map(annot_col = "popup_text")
+```
+
+[^1]: Thanks to my [brother](https://www.facebook.com/lucaridavidmisticmaster) and my friend [Claudia](https://www.facebook.com/Ayla.occord?pnref=friends.search) for the idea about figure 1.

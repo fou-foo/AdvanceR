@@ -1,6 +1,3 @@
-
-
-
 #signif <- readr::read_delim(file ='C:\\Users\\fou-f\\Desktop\\AdvanceR\\Finalproject\\signif.txt', delim = '\t',guess_max = 5420)
 #save(signif, file ='C:\\Users\\fou-f\\Desktop\\AdvanceR\\Finalproject\\FooR\\data\\signif.RData' )
 # Load data
