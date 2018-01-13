@@ -4,27 +4,20 @@ author: "J. Antonio García, jose.ramirez@cimat.mx"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
+  %\VignetteIndexEntry{FooR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteIndexEntry{FooR}
-  
 ---
 
 
-```{r setup, include = FALSE, cache=TRUE}
-knitr::opts_chunk$set( 
-  collapse = TRUE,
-  comment = "#>", 
-  cache = TRUE 
-)
-```
 
-```{r libraries} 
+```{r , echo = FALSE, include = FALSE} 
 library(FooR)
 library(xtable)
 library(pander)
 library(dplyr)
 library(ggplot2)
+library(readr)
 ```
 
 This vignette two process:
@@ -61,11 +54,13 @@ But only the following functions are exported:
 
 
 ## Data
-The package contains the dataset obtained from [National Geophysical Data Center / World Data Service (NGDC/WDS): Significant Earthquake Database. National Geophysical Data Center, NOAA. doi:10.7289/V5TD9V7K](https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1) consulted on the date "`r format(Sys.time(), '%d %B, %Y')`" and and obviously the dataset is called *data*
+The package contains the dataset obtained from [National Geophysical Data Center / World Data Service (NGDC/WDS): Significant Earthquake Database. National Geophysical Data Center, data. doi:10.7289/V5TD9V7K](https://www.ngdc.noaa.gov/nndc/struts/form?t=101650&s=1&d=1) consulted on the date "`r format(Sys.time(), '%d %B, %Y')`" and and obviously the dataset is called *data*
 
 
-```{r print1, echo = FALSE, }
-NOAA <- data
+```{r eq_read_example, message = FALSE , warning=FALSE}
+filename <- system.file("extdata/signif.txt", package = "FooR")
+data <- readr::read_tsv(filename)
+data <- eq_clean_data(data)
 ```
 
  
@@ -105,21 +100,17 @@ NOAA <- data
 
 ## Data cleaning
 
-It is evident that the data set has numerous columns with  [null](https://en.wikipedia.org/wiki/Null_(SQL)) or missing values, <span style="color:RED"> although a future and interesting work for this package would be to apply data imputation techniques to the dataset </span>. For the above you can use the function *eq_clean_data()* and *eq_location_clean*
+It is evident that the data set has numerous columns with  [null](https://en.wikipedia.org/wiki/Null_(SQL)) or missing values, <span style="color:RED"> although a future and interesting work for this package would be to apply data imputation techniques to the dataset </span>. For the above you can use the function `eq_clean_data()` and `eq_location_clean()`
 
-```{r eq_clean_data_eq_location_clean, fig.width = 7, fig.height = 7, }
-NOAA <- eq_clean_data(NOAA)
-NOAA <- eq_location_clean(NOAA)
-```
 
 ## Visualization of earthquakes by time and place :
 
   1. [Doctor-Who](https://en.wikipedia.org/wiki/Doctor_Who)'s [view](https://en.oxforddictionaries.com/definition/view) ( or style1),          *_all the time_* and _*all the countries*_ at once.
      You can visualize earthquakes in all dataset's time variable *YEAR* without 
-     filter by the columns *COUNTRY* and *YEAR* and using the package *ggplot* and        the recently implemented *geom_*, *geom_timeline*  and *geom_timeline_label*.        (you must pay attention with the column so that the visualization is of      a       suitable size and not empty, as in every ggplot´s function, one must have            congruent with the variables' name of the dataset  and the parameters of             *ggplot2::aes* function.)[^1] 
+     filter by the columns *COUNTRY* and *YEAR* and using the package *ggplot* and        the recently implemented `geom_`, `geom_timeline`  and `geom_timeline_label`.        (you must pay attention with the column so that the visualization is of      a       suitable size and not empty, as in every ggplot´s function, one must have            congruent with the variables' name of the dataset  and the parameters of             `ggplot2::aes` function.)[^1] 
 
-```{r doctor,  fig.width = 16, fig.height = 17}
-NOAA %>%
+```{r eq_timeline_example, fig.width = 16, fig.height = 17}
+data %>%
 filter( DEATHS>0) %>%
      ggplot(aes(x = Date,
                 y = COUNTRY,
@@ -136,10 +127,10 @@ filter( DEATHS>0) %>%
 
   2. No-Doctor-Who's (style2), not all the time neither all the countries at once.
      You can visualize earthquakes in a single country after 
-     filter by the column *COUNTRY* or many others, (you must pay       attention with the columns of _YEAR_ and _DEATHS_ so that the visualization is       of a suitable size and not empty, as in every ggplot´s function, one must have      congruent with the variables' name of the dataset  and the parameters of             *ggplot2::aes* function.) 
+     filter by the column `COUNTRY` or many others, (you must pay       attention with the columns of _YEAR_ and _DEATHS_ so that the visualization is       of a suitable size and not empty, as in every ggplot´s function, one must have      congruent with the variables' name of the dataset  and the parameters of             `ggplot2::aes` function.) 
      
 ```{r human, fig.width = 12, fig.height = 3}
-NOAA %>%
+data %>%
 filter(COUNTRY %in% c("USA"), 2020 > YEAR,  YEAR > 2000, DEATHS>0) %>%
      ggplot(aes(x = Date,
                 y = COUNTRY,
@@ -159,7 +150,7 @@ filter(COUNTRY %in% c("USA"), 2020 > YEAR,  YEAR > 2000, DEATHS>0) %>%
      attention with the columns of _YEAR_ and _DEATHS_ as in style2)
      
 ```{r human2, fig.width = 12, fig.height = 6}
-NOAA %>%
+data %>%
 filter(COUNTRY %in% c("USA", "MEXICO", "JAPAN"), 2020 > YEAR,  YEAR > 2000, DEATHS>0) %>%
      ggplot(aes(x = Date,
                 y = COUNTRY,
@@ -175,18 +166,18 @@ filter(COUNTRY %in% c("USA", "MEXICO", "JAPAN"), 2020 > YEAR,  YEAR > 2000, DEAT
 
 # Visualize earthquakes on a pretty map
 
-Using the *leaflet* package it is very easy to make beautiful interactive maps using the function *eq_map()*.There are two options to use this function one without using the function *eq_create_label()* from where we get the following map:
+Using the `leaflet` package it is very easy to make beautiful interactive maps using the function `eq_map()`.There are two options to use this function one without using the function `eq_create_label()` from where we get the following map:
 
 ```{r mapa_simple, fig.width = 8, fig.height = 6}
-NOAA %>% 
+data %>% 
    dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(Date) >= 2000) %>% 
-  eq_map(annot_col = "DATE")
+  eq_map(annot_col = "Date")
 ```
 
 And the other one using it
 
 ```{r mapa_con_marcas, fig.width = 8, fig.height = 6}
-NOAA %>%
+data %>%
  dplyr::filter(COUNTRY == "MEXICO" & lubridate::year(Date) >= 2000) %>% 
   dplyr::mutate(popup_text = eq_create_label(.)) %>% 
   eq_map(annot_col = "popup_text")

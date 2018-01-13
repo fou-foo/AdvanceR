@@ -143,6 +143,7 @@ geom_timeline_label <- function(mapping = NULL, data = NULL, stat = "identity", 
 #' dplyr::mutate(popup_text = eq_create_label(.)) %>% eq_map(annot_col = "popup_text")}
 #' @importFrom leaflet leaflet addCircleMarkers addProviderTiles addTiles
 #' @export
+#'
 eq_map <- function(eq_data, annot_col)
   {
     annot <- eq_data %>% magrittr::extract2(annot_col) %>% as.character

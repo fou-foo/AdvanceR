@@ -1,10 +1,3 @@
-#signif <- readr::read_delim(file ='C:\\Users\\fou-f\\Desktop\\AdvanceR\\Finalproject\\signif.txt', delim = '\t',guess_max = 5420)
-#save(signif, file ='C:\\Users\\fou-f\\Desktop\\AdvanceR\\Finalproject\\FooR\\data\\signif.RData' )
-# Load data
-#data <- readr::read_delim(file ='data\\signif.txt', delim = '\t',guess_max = 5420)
-#devtools::use_data(signif)
-#data <- devtools::use_data(signif)
-
 
 #' @title fecha
 #'
@@ -42,14 +35,13 @@ fecha <- function(n)
 }
 
 
-#' @title eq_clean_datafunction to convert the variable 'YEAR' to a lubridate
+#' @title eq_clean_data function to convert the variable 'YEAR' to a lubridate
 #'  package format ymd
 #'
 #' @description function to convert the variable 'YEAR' to a lubridate
 #'  package format ymd,convert the variable 'YEAR' of character type to
 #' a manageable date with the lubridate package
-#' @param n the number of the record in the data set (numeric)
-#'
+#' @param data (dataset)
 #' @return data output from function 'fecha' (dataset)
 #' @examples
 #' \dontrun{NOAA <- eq_clean_data(data)}
@@ -71,7 +63,7 @@ eq_clean_data <- function(data)
   NOAA$DEATHS <- as.numeric(NOAA$DEATHS)
   NOAA$YEAR <- as.numeric(NOAA$YEAR)
   NOAA$EQ_MAG_ML <- as.numeric(NOAA$EQ_MAG_ML)
-  NOAA
+  as.data.frame(NOAA)
 
 }
 
@@ -82,16 +74,16 @@ eq_clean_data <- function(data)
 #' variable and the result transforms it into uppercase and lowercase
 #' (a somewhat absurd requirement).
 #'
-#' @param NOAA dataset with 'LOCATION_NAME' variable (dataset)
+#' @param data dataset with 'LOCATION_NAME' variable (dataset)
 #'
-#' @return NOAA with nice 'LOCATION_NAME' (dataset)
+#' @return data with nice 'LOCATION_NAME' (dataset)
 #'
 #' @examples
-#' \dontrun{NOAA <- eq_location_clean(NOAA)}
+#' \dontrun{NOAA <- eq_location_clean(data)}
 #'
 #' @export
-eq_location_clean<- function(NOAA)
+eq_location_clean<- function(data)
 {
-  NOAA$LOCATION_NAME <- tolower(gsub(".*:","",NOAA$LOCATION_NAME))
-  NOAA
+  data$LOCATION_NAME <- tolower(gsub(".*:","",data$LOCATION_NAME))
+  as.data.frame(data)
 }

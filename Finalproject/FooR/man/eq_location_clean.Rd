@@ -4,13 +4,13 @@
 \alias{eq_location_clean}
 \title{eq_location_clean}
 \usage{
-eq_location_clean(NOAA)
+eq_location_clean(data)
 }
 \arguments{
-\item{NOAA}{dataset with 'LOCATION_NAME' variable (dataset)}
+\item{data}{dataset with 'LOCATION_NAME' variable (dataset)}
 }
 \value{
-NOAA with nice 'LOCATION_NAME' (dataset)
+data with nice 'LOCATION_NAME' (dataset)
 }
 \description{
 After remove the name of the country in the 'LOCATION_NAME'
@@ -18,6 +18,6 @@ variable and the result transforms it into uppercase and lowercase
 (a somewhat absurd requirement).
 }
 \examples{
-\dontrun{NOAA <- eq_location_clean(NOAA)}
+\dontrun{NOAA <- eq_location_clean(data)}
 
 }

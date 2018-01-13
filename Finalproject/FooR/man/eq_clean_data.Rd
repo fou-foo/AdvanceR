@@ -2,13 +2,13 @@
 % Please edit documentation in R/clean.R
 \name{eq_clean_data}
 \alias{eq_clean_data}
-\title{eq_clean_datafunction to convert the variable 'YEAR' to a lubridate
+\title{eq_clean_data function to convert the variable 'YEAR' to a lubridate
  package format ymd}
 \usage{
 eq_clean_data(data)
 }
 \arguments{
-\item{n}{the number of the record in the data set (numeric)}
+\item{data}{(dataset)}
 }
 \value{
 data output from function 'fecha' (dataset)
